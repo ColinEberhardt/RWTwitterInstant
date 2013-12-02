@@ -1,5 +1,5 @@
 //
-//  RWViewController.h
+//  RWSearchFormViewController.h
 //  TwitterInstant
 //
 //  Created by Colin Eberhardt on 02/12/2013.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RWViewController : UIViewController
+@interface RWSearchFormViewController : UIViewController
 
 @end

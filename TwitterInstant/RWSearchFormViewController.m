@@ -8,6 +8,7 @@
 
 #import "RWSearchFormViewController.h"
 #import "RWSearchResultsViewController.h"
+#import "RACEXTScope.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
 @interface RWSearchFormViewController ()
@@ -30,12 +31,14 @@
   
   self.resultsViewController = self.splitViewController.viewControllers[1];
   
+  @weakify(self)
   [[self.searchText.rac_textSignal
     map:^id(NSString *text) {
       return [self isValidSearchText:text] ?
         [UIColor whiteColor] : [UIColor yellowColor];
     }]
     subscribeNext:^(UIColor *color) {
+      @strongify(self)
       self.searchText.backgroundColor = color;
     }];
 }

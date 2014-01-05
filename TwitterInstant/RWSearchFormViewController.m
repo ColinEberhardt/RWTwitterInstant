@@ -56,9 +56,17 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
   self.accountStore = [[ACAccountStore alloc] init];
   self.twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
 
-  [[self requestAccessToTwitterSignal]
+  [[[[self requestAccessToTwitterSignal]
+    then:^RACSignal *{
+      @strongify(self)
+      return self.searchText.rac_textSignal;
+    }]
+    filter:^BOOL(NSString *text) {
+      @strongify(self)
+      return [self isValidSearchText:text];
+    }]
     subscribeNext:^(id x) {
-      NSLog(@"Access granted");
+      NSLog(@"%@", x);
     } error:^(NSError *error) {
       NSLog(@"An error occurred: %@", error);
     }];

@@ -51,7 +51,29 @@
   cell.twitterStatusText.text = tweet.status;
   cell.twitterUsernameText.text = [NSString stringWithFormat:@"@%@",tweet.username];
   
+  cell.twitterAvatarView.image = nil;
+  [[[self signalForLoadingImage:tweet.profileImageUrl]
+    deliverOn:[RACScheduler mainThreadScheduler]]
+    subscribeNext:^(UIImage *image) {
+     cell.twitterAvatarView.image = image;
+    }];
+
   return cell;
 }
+
+-(RACSignal *)signalForLoadingImage:(NSString *)imageUrl {
+  
+  RACScheduler *scheduler = [RACScheduler schedulerWithPriority:RACSchedulerPriorityBackground];
+  
+  return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
+    UIImage *image = [UIImage imageWithData:data];
+    [subscriber sendNext:image];
+    [subscriber sendCompleted];
+    return nil;
+  }] subscribeOn:scheduler];
+  
+}
+
 
 @end

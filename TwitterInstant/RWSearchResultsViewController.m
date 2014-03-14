@@ -52,7 +52,8 @@
   cell.twitterUsernameText.text = [NSString stringWithFormat:@"@%@",tweet.username];
   
   cell.twitterAvatarView.image = nil;
-  [[[self signalForLoadingImage:tweet.profileImageUrl]
+  [[[[self signalForLoadingImage:tweet.profileImageUrl]
+    takeUntil:cell.rac_prepareForReuseSignal]
     deliverOn:[RACScheduler mainThreadScheduler]]
     subscribeNext:^(UIImage *image) {
      cell.twitterAvatarView.image = image;

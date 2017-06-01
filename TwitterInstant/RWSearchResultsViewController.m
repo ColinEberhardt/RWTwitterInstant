@@ -56,24 +56,31 @@
     takeUntil:cell.rac_prepareForReuseSignal]
     deliverOn:[RACScheduler mainThreadScheduler]]
     subscribeNext:^(UIImage *image) {
-     cell.twitterAvatarView.image = image;
+     cell.imageView.image = image;
     }];
 
   return cell;
 }
 
 -(RACSignal *)signalForLoadingImage:(NSString *)imageUrl {
-  
-  RACScheduler *scheduler = [RACScheduler schedulerWithPriority:RACSchedulerPriorityBackground];
-  
-  return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
-    UIImage *image = [UIImage imageWithData:data];
-    [subscriber sendNext:image];
-    [subscriber sendCompleted];
-    return nil;
-  }] subscribeOn:scheduler];
-  
+    
+    RACScheduler *scheduler = [RACScheduler schedulerWithPriority:RACSchedulerPriorityBackground];
+    
+    return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        NSError* error = nil;
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl] options:NSDataReadingUncached error:&error];
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+        } else {
+            NSLog(@"Data has loaded successfully.");
+        }
+        
+        UIImage *image = [UIImage imageWithData:data];
+        [subscriber sendNext:image];
+        [subscriber sendCompleted];
+        return nil;
+    }] subscribeOn:scheduler];
+    
 }
 
 

@@ -8,7 +8,8 @@
 
 #import "RWSearchFormViewController.h"
 #import "RWSearchResultsViewController.h"
-#import "RACEXTScope.h"
+//#import "RACEXTScope.h"
+#import <ReactiveCocoa/RACEXTScope.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
